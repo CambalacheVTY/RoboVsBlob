@@ -591,6 +591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  hp: 5
   canMove: 1
 --- !u!114 &5175827722437160830
 MonoBehaviour:
@@ -609,6 +610,6 @@ MonoBehaviour:
   attackLeft: {fileID: 4897782922648986263}
   attackRight: {fileID: 1634509486288588623}
   attackDuration: 0.1
-  attackCooldown: 0.2
+  attackCooldown: 0.5
   damage: 2
   canPerformAttack: 1

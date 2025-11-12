@@ -29,12 +29,12 @@ public class objectManager : MonoBehaviour
         {
             chips++;
             Debug.Log("Chips: " + chips);
-            return true; // objeto agregado
+            return true;
         }
         else
         {
             Debug.Log("No puedes recoger más Chips");
-            return false; // no se pudo agregar
+            return false;
         }
     }
 
@@ -66,5 +66,20 @@ public class objectManager : MonoBehaviour
             Debug.Log("No puedes recoger más Gears");
             return false;
         }
+    }
+
+    public void RemoveChip(int amount)
+    {
+        chips = Mathf.Max(0, chips - amount);
+    }
+
+    public void RemoveBolt(int amount)
+    {
+        bolts = Mathf.Max(0, bolts - amount);
+    }
+
+    public void RemoveGear(int amount)
+    {
+        gears = Mathf.Max(0, gears - amount);
     }
 }

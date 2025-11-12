@@ -4,85 +4,122 @@ using UnityEngine.InputSystem;
 public class CraftMenuManager : MonoBehaviour
 {
     private InputSystem_Actions controls;
-    private InputAction playerActivate;
-    private InputAction craftDeactivate;
-
-    [Header("UI")]
     public GameObject craftMenu;
 
     private bool isMenuOpen = false;
+
+    private int usedChips = 0;
+    private int usedBolts = 0;
+    private int usedGears = 0;
+
+    public GameObject Bomb;
+    public GameObject SuperBomb;
 
     private void Awake()
     {
         controls = new InputSystem_Actions();
 
-        // Usar propiedades generadas directamente
-        playerActivate = controls.Player.Activate;
-        craftDeactivate = controls.Craft.Deactivate;
+        // Mapeo de controles del menú de crafteo
+        controls.Craft.SelectLeft.performed += ctx => OnSelectLeft();
+        controls.Craft.SelectRight.performed += ctx => OnSelectRight();
+        controls.Craft.SelectUp.performed += ctx => OnSelectUp();
+        controls.Craft.Deactivate.performed += ctx => CloseMenu();
 
-        // Comenzamos con Craft deshabilitado y Player activo
-        controls.Craft.Disable();
-        controls.Player.Enable();
-
-        if (craftMenu != null)
-            craftMenu.SetActive(false);
+        // Control para abrir/cerrar menú desde el mapa Player
+        controls.Player.Activate.performed += ctx => ToggleMenu();
     }
 
     private void OnEnable()
     {
-        if (playerActivate != null)
-            playerActivate.performed += OnPlayerActivate;
-
-        if (craftDeactivate != null)
-            craftDeactivate.performed += OnCraftDeactivate;
+        controls.Player.Enable();
+        controls.Craft.Disable();
     }
 
     private void OnDisable()
     {
-        if (playerActivate != null)
-            playerActivate.performed -= OnPlayerActivate;
-
-        if (craftDeactivate != null)
-            craftDeactivate.performed -= OnCraftDeactivate;
+        controls.Player.Disable();
+        controls.Craft.Disable();
     }
 
-    private void OnPlayerActivate(InputAction.CallbackContext context)
+    private void ToggleMenu()
     {
-        SetMenuState(true); // Abrir menú
-    }
-
-    private void OnCraftDeactivate(InputAction.CallbackContext context)
-    {
-        SetMenuState(false); // Cerrar menú
-    }
-
-    private void SetMenuState(bool open)
-    {
-        isMenuOpen = open;
-
-        // Activar o desactivar menú UI
-        if (craftMenu != null)
-            craftMenu.SetActive(open);
-
-        // Cursor y time scale
-        Cursor.visible = open;
-        Cursor.lockState = open ? CursorLockMode.None : CursorLockMode.Locked;
-        Time.timeScale = open ? 0.25f : 1f;
-
-        // Bloquear movimiento del Player
-        var playerMovement = FindFirstObjectByType<BlobMovement>();
-        if (playerMovement != null)
-            playerMovement.canMove = !open;
-
-        // Bloquear ataques del Player
-        var attackController = FindFirstObjectByType<BlobAttackController>();
-        if (attackController != null)
-            attackController.canPerformAttack = !open;
-
-        // Habilitar Craft para detectar la acción de cerrar
-        if (open)
-            controls.Craft.Enable();
+        if (isMenuOpen)
+            CloseMenu();
         else
-            controls.Craft.Disable();
+            OpenMenu();
+    }
+
+    private void OpenMenu()
+    {
+        isMenuOpen = true;
+        craftMenu.SetActive(true);
+        Time.timeScale = 0.3f;
+
+        usedChips = 0;
+        usedBolts = 0;
+        usedGears = 0;
+
+        // Desactivar mapa Player y activar mapa Craft
+        controls.Player.Disable();
+        controls.Craft.Enable();
+    }
+
+    private void CloseMenu()
+    {
+        if (!isMenuOpen) return;
+
+        isMenuOpen = false;
+        craftMenu.SetActive(false);
+        Time.timeScale = 1f;
+
+        // Volver a habilitar Player y desactivar Craft
+        controls.Craft.Disable();
+        controls.Player.Enable();
+
+        CheckCombinations();
+    }
+
+    // =====================
+    //   Selecciones Craft
+    // =====================
+
+    private void OnSelectLeft()
+    {
+        if (!isMenuOpen) return;
+        objectManager.Instance.RemoveChip(1);
+        usedChips++;
+    }
+
+    private void OnSelectRight()
+    {
+        if (!isMenuOpen) return;
+        objectManager.Instance.RemoveGear(1);
+        usedGears++;
+    }
+
+    private void OnSelectUp()
+    {
+        if (!isMenuOpen) return;
+        objectManager.Instance.RemoveBolt(1);
+        usedBolts++;
+    }
+
+    // =====================
+    //   Resultado Craft
+    // =====================
+
+    private void CheckCombinations()
+    {
+        // 2 bolts → bomba
+        if (usedBolts == 2 && Bomb != null)
+        {
+            Bomb.GetComponent<Bomb>().Equip = true;
+        }
+
+        // 3 bolts → super bomba
+        if (usedBolts >= 3 && SuperBomb != null)
+        {
+            SuperBomb.GetComponent<Bomb>().Equip = true;
+        }
     }
 }

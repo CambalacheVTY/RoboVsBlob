@@ -14,9 +14,9 @@ public class BlobAttackController : MonoBehaviour
     public int damage = 2;
 
     private bool canAttack = true;
-    private InputSystem_Actions input; // tu asset del nuevo sistema de inputs
+    private InputSystem_Actions input; 
 
-    // Nuevo bool para habilitar/deshabilitar ataques
+    
     public bool canPerformAttack = true;
 
     private void Awake()
@@ -26,7 +26,7 @@ public class BlobAttackController : MonoBehaviour
 
     private void Start()
     {
-        // Fuerza los colliders a comenzar apagados
+        
         if (attackUp != null) attackUp.enabled = false;
         if (attackDown != null) attackDown.enabled = false;
         if (attackLeft != null) attackLeft.enabled = false;
@@ -37,7 +37,7 @@ public class BlobAttackController : MonoBehaviour
     {
         input.Enable();
 
-        // Suscribimos eventos de cada dirección
+        
         input.Player.AttackUp.performed += ctx => TryAttack(attackUp);
         input.Player.AttackDown.performed += ctx => TryAttack(attackDown);
         input.Player.AttackLeft.performed += ctx => TryAttack(attackLeft);
@@ -65,7 +65,7 @@ public class BlobAttackController : MonoBehaviour
         canAttack = false;
         attackCollider.enabled = true;
 
-        // Asignamos daño a la hitbox
+        
         var hitbox = attackCollider.GetComponent<AttackHitbox>();
         if (hitbox != null)
             hitbox.damage = damage;

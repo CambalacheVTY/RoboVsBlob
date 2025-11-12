@@ -8,7 +8,7 @@ public class Robo1Movement : MonoBehaviour
     public float moveSpeed = 3f;
     public float knockbackForce = 3f;
 
-    // 🆕 Prefab del coleccionable
+    
     public GameObject collectiblePrefab;
 
     private Rigidbody2D rb;
@@ -38,7 +38,20 @@ public class Robo1Movement : MonoBehaviour
         rb.linearVelocity = direction * moveSpeed;
 
         if (Health <= 0)
-            Die(); // 🆕 cambio: llamamos a Die() en lugar de Destroy directamente
+            Die(); 
+    }
+    public void TakeDamage(DamageInfo info)
+    {
+        Health -= info.amount;
+
+        if (!isFlashing)
+            StartCoroutine(FlashRed());
+
+        Vector2 knockDir = ((Vector2)transform.position - info.sourcePos).normalized;
+        StartCoroutine(ApplyKnockback(knockDir));
+
+        if (Health <= 0)
+            Die();
     }
 
     public void TakeDamage(int amount, Vector2 hitSource)
@@ -52,7 +65,7 @@ public class Robo1Movement : MonoBehaviour
         StartCoroutine(ApplyKnockback(knockDir));
 
         if (Health <= 0)
-            Die(); // 🆕 cambio: llamamos a Die() en lugar de Destroy directamente
+            Die();
     }
 
     private IEnumerator FlashRed()
@@ -74,14 +87,14 @@ public class Robo1Movement : MonoBehaviour
         isKnockedBack = false;
     }
 
-    // 🆕 Función para manejar la muerte del enemigo
+    
     private void Die()
     {
-        TrySpawnCollectible(); // 🆕 intento de spawnear collectible antes de destruir
+        TrySpawnCollectible(); 
         Destroy(gameObject);
     }
 
-    // 🆕 Función que tiene 25% de probabilidad de spawnear un coleccionable
+    
     private void TrySpawnCollectible()
     {
         if (collectiblePrefab == null) return;
@@ -90,7 +103,7 @@ public class Robo1Movement : MonoBehaviour
         if (chance <= 0.25f)
         {
             Instantiate(collectiblePrefab, transform.position, Quaternion.identity);
-            Debug.Log("Coleccionable spawneado!"); // 🆕 log opcional
+            
         }
     }
 }

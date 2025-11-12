@@ -7,9 +7,9 @@ public class Robo2Movement : MonoBehaviour
     public Transform target;
     public float moveSpeed = 3f;
     public float knockbackForce = 3f;
-    public float slideSmoothness = 5f; // 🌀 qué tan suave es el deslizamiento (más alto = más suave)
+    public float slideSmoothness = 10f;
 
-    // 🆕 Prefab del coleccionable
+    
     public GameObject collectiblePrefab;
 
     private Rigidbody2D rb;
@@ -17,7 +17,7 @@ public class Robo2Movement : MonoBehaviour
     private bool isFlashing = false;
     private bool isKnockedBack = false;
 
-    private Vector2 currentVelocity; // 🌀 para interpolar suavemente
+    private Vector2 currentVelocity; 
 
     void Start()
     {
@@ -36,17 +36,31 @@ public class Robo2Movement : MonoBehaviour
     {
         if (isKnockedBack || target == null) return;
 
-        // 🌀 Dirección hacia el jugador
+
         Vector2 desiredDirection = ((Vector2)target.position - (Vector2)transform.position).normalized;
         Vector2 desiredVelocity = desiredDirection * moveSpeed;
 
-        // 🌀 Interpolación suave entre la velocidad actual y la deseada
+
         currentVelocity = Vector2.Lerp(currentVelocity, desiredVelocity, Time.fixedDeltaTime * slideSmoothness);
 
         rb.linearVelocity = currentVelocity;
 
         if (Health <= 0)
-            Die(); // 🆕 llamamos a Die() antes de destruir
+            Die();
+    }
+
+    public void TakeDamage(DamageInfo info)
+    {
+        Health -= info.amount;
+
+        if (!isFlashing)
+            StartCoroutine(FlashRed());
+
+        Vector2 knockDir = ((Vector2)transform.position - info.sourcePos).normalized;
+        StartCoroutine(ApplyKnockback(knockDir));
+
+        if (Health <= 0)
+            Die();
     }
 
     public void TakeDamage(int amount, Vector2 hitSource)
@@ -60,7 +74,7 @@ public class Robo2Movement : MonoBehaviour
         StartCoroutine(ApplyKnockback(knockDir));
 
         if (Health <= 0)
-            Die(); // 🆕 llamamos a Die() antes de destruir
+            Die(); 
     }
 
     private IEnumerator FlashRed()
@@ -82,14 +96,13 @@ public class Robo2Movement : MonoBehaviour
         isKnockedBack = false;
     }
 
-    // 🆕 Función que maneja la muerte del enemigo
     private void Die()
     {
-        TrySpawnCollectible(); // 🆕 intento de spawnear collectible antes de destruir
+        TrySpawnCollectible(); 
         Destroy(gameObject);
     }
 
-    // 🆕 Función que tiene 25% de probabilidad de spawnear un coleccionable
+   
     private void TrySpawnCollectible()
     {
         if (collectiblePrefab == null) return;

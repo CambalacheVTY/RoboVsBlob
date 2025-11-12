@@ -7,24 +7,24 @@ public class Robo3Movement : MonoBehaviour
     public Transform target;
     public float moveSpeed = 3f;
     public float knockbackForce = 3f;
-    public float moveDuration = 0.5f;   // 🌀 tiempo moviéndose
-    public float stopDuration = 0.5f;   // 🌀 tiempo quieto
+    public float moveDuration = 0.5f;   
+    public float stopDuration = 0.5f;   
 
-    // 🆕 Prefab del coleccionable
+   
     public GameObject collectiblePrefab;
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private bool isFlashing = false;
     private bool isKnockedBack = false;
-    private bool isMoving = false; // 🌀 controla cuándo se mueve
+    private bool isMoving = false; 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-        // 🌀 arranca el ciclo de movimiento
+       
         StartCoroutine(MoveCycle());
     }
 
@@ -69,9 +69,22 @@ public class Robo3Movement : MonoBehaviour
         }
 
         if (Health <= 0)
-            Die(); // 🆕 llamamos a Die() en lugar de Destroy
+            Die();
     }
 
+    public void TakeDamage(DamageInfo info)
+    {
+        Health -= info.amount;
+
+        if (!isFlashing)
+            StartCoroutine(FlashRed());
+
+        Vector2 knockDir = ((Vector2)transform.position - info.sourcePos).normalized;
+        StartCoroutine(ApplyKnockback(knockDir));
+
+        if (Health <= 0)
+            Die();
+    }
     public void TakeDamage(int amount, Vector2 hitSource)
     {
         Health -= amount;
@@ -83,7 +96,7 @@ public class Robo3Movement : MonoBehaviour
         StartCoroutine(ApplyKnockback(knockDir));
 
         if (Health <= 0)
-            Die(); // 🆕 llamamos a Die() en lugar de Destroy
+            Die();
     }
 
     private IEnumerator FlashRed()
@@ -105,14 +118,14 @@ public class Robo3Movement : MonoBehaviour
         isKnockedBack = false;
     }
 
-    // 🆕 Función que maneja la muerte del enemigo
+   
     private void Die()
     {
-        TrySpawnCollectible(); // 🆕 intento de spawnear collectible antes de destruir
+        TrySpawnCollectible(); 
         Destroy(gameObject);
     }
 
-    // 🆕 Función que tiene 25% de probabilidad de spawnear un coleccionable
+  
     private void TrySpawnCollectible()
     {
         if (collectiblePrefab == null) return;
