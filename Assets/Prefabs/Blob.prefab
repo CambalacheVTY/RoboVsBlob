@@ -593,6 +593,7 @@ MonoBehaviour:
   moveSpeed: 5
   hp: 5
   canMove: 1
+  canBeDamaged: 1
 --- !u!114 &5175827722437160830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -612,4 +613,13 @@ MonoBehaviour:
   attackDuration: 0.1
   attackCooldown: 0.5
   damage: 2
+  bombPrefab: {fileID: 8955934172543432011, guid: de1a1995544a0ba4fb70fb81148c4cdb, type: 3}
+  superBombPrefab: {fileID: 8955934172543432011, guid: 843f19ee7a5e43d4fb83f7e8c1cdf7c6, type: 3}
+  bombEquipped: 0
+  superBombEquipped: 0
+  bat: {fileID: 5422506871665631665, guid: cfd1cafc06bf02b48a4f65f8bb9eaed4, type: 3}
+  chainsaw: {fileID: 2867741535832001843, guid: aafa6e5b18a23bc408e5f24057981881, type: 3}
+  batEquipped: 0
+  chainsawEquipped: 0
+  crafted: 0
   canPerformAttack: 1

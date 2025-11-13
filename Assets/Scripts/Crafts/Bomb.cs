@@ -1,5 +1,4 @@
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
@@ -16,25 +15,18 @@ public class Bomb : MonoBehaviour
     private bool exploded = false;
     private float timer = 0f;
     private Vector2 launchDir = Vector2.right;
-    private InputSystem_Actions controls;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CircleCollider2D>();
         col.enabled = false;
-
-        controls = new InputSystem_Actions();
     }
 
-    private void OnEnable()
+    // 🆕 agregado: permite definir la dirección desde fuera (BlobAttackController)
+    public void SetLaunchDirection(Vector2 dir)
     {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
+        launchDir = dir.normalized;
     }
 
     private void Start()
@@ -45,11 +37,6 @@ public class Bomb : MonoBehaviour
             return;
         }
 
-        Vector2 inputDir = controls.Player.Move.ReadValue<Vector2>();
-        if (inputDir == Vector2.zero)
-            inputDir = Vector2.right;
-
-        launchDir = inputDir.normalized;
         rb.linearVelocity = launchDir * moveSpeed;
     }
 

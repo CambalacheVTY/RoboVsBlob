@@ -68,6 +68,7 @@ public class objectManager : MonoBehaviour
         }
     }
 
+
     public void RemoveChip(int amount)
     {
         chips = Mathf.Max(0, chips - amount);
@@ -82,4 +83,20 @@ public class objectManager : MonoBehaviour
     {
         gears = Mathf.Max(0, gears - amount);
     }
+
+    public int GetChips()
+    {
+        return chips;
+    }
+
+    public int GetBolts()
+    {
+        return bolts;
+    }
+
+    public int GetGears()
+    {
+        return gears;
+    }
+
 }

@@ -15,30 +15,35 @@ public class CraftMenuManager : MonoBehaviour
     public GameObject Bomb;
     public GameObject SuperBomb;
 
+    private BlobAttackController playerAttack; 
+
     private void Awake()
     {
         controls = new InputSystem_Actions();
 
-        // Mapeo de controles del menú de crafteo
-        controls.Craft.SelectLeft.performed += ctx => OnSelectLeft();
-        controls.Craft.SelectRight.performed += ctx => OnSelectRight();
-        controls.Craft.SelectUp.performed += ctx => OnSelectUp();
-        controls.Craft.Deactivate.performed += ctx => CloseMenu();
-
-        // Control para abrir/cerrar menú desde el mapa Player
+       
         controls.Player.Activate.performed += ctx => ToggleMenu();
+
+        
+        controls.Player.AttackLeft.performed += ctx => OnSelectLeft();
+        controls.Player.AttackRight.performed += ctx => OnSelectRight();
+        controls.Player.AttackUp.performed += ctx => OnSelectUp();
+    }
+
+    private void Start()
+    {
+        
+        playerAttack = FindFirstObjectByType<BlobAttackController>();
     }
 
     private void OnEnable()
     {
         controls.Player.Enable();
-        controls.Craft.Disable();
     }
 
     private void OnDisable()
     {
         controls.Player.Disable();
-        controls.Craft.Disable();
     }
 
     private void ToggleMenu()
@@ -59,9 +64,9 @@ public class CraftMenuManager : MonoBehaviour
         usedBolts = 0;
         usedGears = 0;
 
-        // Desactivar mapa Player y activar mapa Craft
-        controls.Player.Disable();
-        controls.Craft.Enable();
+        
+        if (playerAttack != null)
+            playerAttack.canPerformAttack = false;
     }
 
     private void CloseMenu()
@@ -72,9 +77,9 @@ public class CraftMenuManager : MonoBehaviour
         craftMenu.SetActive(false);
         Time.timeScale = 1f;
 
-        // Volver a habilitar Player y desactivar Craft
-        controls.Craft.Disable();
-        controls.Player.Enable();
+     
+        if (playerAttack != null)
+            playerAttack.canPerformAttack = true;
 
         CheckCombinations();
     }
@@ -86,22 +91,55 @@ public class CraftMenuManager : MonoBehaviour
     private void OnSelectLeft()
     {
         if (!isMenuOpen) return;
-        objectManager.Instance.RemoveChip(1);
-        usedChips++;
+
+        var obj = objectManager.Instance;
+
+        if (obj.GetChips() > 0)
+        {
+            obj.RemoveChip(1);
+            usedChips++;
+            Debug.Log("🧩 Chip usado. Total usados: " + usedChips);
+        }
+        else
+        {
+            Debug.Log("❌ No hay más Chips disponibles.");
+        }
     }
 
     private void OnSelectRight()
     {
         if (!isMenuOpen) return;
-        objectManager.Instance.RemoveGear(1);
-        usedGears++;
+
+        var obj = objectManager.Instance;
+
+        if (obj.GetGears() > 0)
+        {
+            obj.RemoveGear(1);
+            usedGears++;
+            Debug.Log("⚙️ Gear usado. Total usados: " + usedGears);
+        }
+        else
+        {
+            Debug.Log("❌ No hay más Gears disponibles.");
+        }
     }
 
     private void OnSelectUp()
     {
         if (!isMenuOpen) return;
-        objectManager.Instance.RemoveBolt(1);
-        usedBolts++;
+
+        var obj = objectManager.Instance;
+
+        if (obj.GetBolts() > 0)
+        {
+            obj.RemoveBolt(1);
+            usedBolts++;
+            Debug.Log("🔩 Bolt usado. Total usados: " + usedBolts);
+        }
+        else
+        {
+            Debug.Log("❌ No hay más Bolts disponibles.");
+        }
     }
 
     // =====================
@@ -110,16 +148,48 @@ public class CraftMenuManager : MonoBehaviour
 
     private void CheckCombinations()
     {
-        // 2 bolts → bomba
-        if (usedBolts == 2 && Bomb != null)
+        var playerAttack = FindFirstObjectByType<BlobAttackController>();
+        var obj = objectManager.Instance;
+
+        int bolts = obj.GetBolts();
+        int chips = obj.GetChips();
+        int gears = obj.GetGears();
+
+        
+        if (usedBolts == 2 && usedChips == 0 && usedGears == 0)
+        {   
+                playerAttack.bombEquipped = true;    
+        }
+                
+        else if (usedBolts >= 3 && usedChips == 0 && usedGears == 0)
+        { 
+                playerAttack.superBombEquipped = true;            
+        }
+        else if (usedBolts == 0 && usedChips == 2 && usedGears == 0) //falta hacer que el bate solo pegue una vez
         {
-            Bomb.GetComponent<Bomb>().Equip = true;
+            playerAttack.batEquipped = true;
+            playerAttack.crafted = true;
+            
         }
 
-        // 3 bolts → super bomba
-        if (usedBolts >= 3 && SuperBomb != null)
+        else if (usedBolts == 0 && usedChips >= 3 && usedGears == 0)
         {
-            SuperBomb.GetComponent<Bomb>().Equip = true;
+            playerAttack.chainsawEquipped = true;
+            playerAttack.crafted = true;
+            
         }
+
+        // ❌ Si ninguna combinación es válida → reembolso
+        if (playerAttack.crafted == false)
+        {
+            Debug.Log("❌ Receta inválida. Se reembolsan materiales usados.");
+
+            
+        }
+
+        usedBolts = 0;
+        usedChips = 0;
+        usedGears = 0;
+
     }
 }

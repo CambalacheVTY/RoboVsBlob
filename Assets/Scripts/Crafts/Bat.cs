@@ -36,6 +36,7 @@ public class Bat : MonoBehaviour
 
     private void TrySwing(Vector2 dir)
     {
+        // Solo puede golpear si está equipado y no está en cooldown
         if (!Equip || hasSwung) return;
 
         hasSwung = true;
@@ -43,16 +44,26 @@ public class Bat : MonoBehaviour
         transform.position = player.position + (Vector3)dir * offsetDistance;
         col.enabled = true;
 
+        // Desactiva el collider después de un tiempo corto
         Invoke(nameof(ResetBat), 0.15f);
-
-        Equip = false;
     }
 
     private void ResetBat()
     {
         col.enabled = false;
         hasSwung = false;
+
+        // Siempre vuelve a seguir al jugador
         transform.position = player.position;
+    }
+
+    private void Update()
+    {
+        // Si está equipado, que siempre siga la posición del jugador
+        if (Equip)
+        {
+            transform.position = player.position;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

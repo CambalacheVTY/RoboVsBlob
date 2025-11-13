@@ -4,19 +4,33 @@ using System.Collections;
 
 public class BlobAttackController : MonoBehaviour
 {
+    [Header("Attack Hitboxes")]
     public Collider2D attackUp;
     public Collider2D attackDown;
     public Collider2D attackLeft;
     public Collider2D attackRight;
 
+    [Header("Attack Settings")]
     public float attackDuration = 0.1f;
     public float attackCooldown = 0.2f;
     public int damage = 2;
 
-    private bool canAttack = true;
-    private InputSystem_Actions input; 
+    [Header("Bombs")]
+    public GameObject bombPrefab;
+    public GameObject superBombPrefab;
+    [HideInInspector] public bool bombEquipped = false;
+    [HideInInspector] public bool superBombEquipped = false;
 
-    
+    [Header("Melee Weapons")]
+    public Bat bat;
+    public Chainsaw chainsaw;
+    public bool batEquipped = false;
+    public bool chainsawEquipped = false;
+
+    [HideInInspector] public bool crafted = false;
+
+    private bool canAttack = true;
+    private InputSystem_Actions input;
     public bool canPerformAttack = true;
 
     private void Awake()
@@ -26,7 +40,6 @@ public class BlobAttackController : MonoBehaviour
 
     private void Start()
     {
-        
         if (attackUp != null) attackUp.enabled = false;
         if (attackDown != null) attackDown.enabled = false;
         if (attackLeft != null) attackLeft.enabled = false;
@@ -37,11 +50,10 @@ public class BlobAttackController : MonoBehaviour
     {
         input.Enable();
 
-        
-        input.Player.AttackUp.performed += ctx => TryAttack(attackUp);
-        input.Player.AttackDown.performed += ctx => TryAttack(attackDown);
-        input.Player.AttackLeft.performed += ctx => TryAttack(attackLeft);
-        input.Player.AttackRight.performed += ctx => TryAttack(attackRight);
+        input.Player.AttackUp.performed += ctx => HandleAttack(Vector2.up, attackUp);
+        input.Player.AttackDown.performed += ctx => HandleAttack(Vector2.down, attackDown);
+        input.Player.AttackLeft.performed += ctx => HandleAttack(Vector2.left, attackLeft);
+        input.Player.AttackRight.performed += ctx => HandleAttack(Vector2.right, attackRight);
     }
 
     private void OnDisable()
@@ -49,11 +61,42 @@ public class BlobAttackController : MonoBehaviour
         input.Disable();
     }
 
-    private void TryAttack(Collider2D attackCollider)
+    private void HandleAttack(Vector2 dir, Collider2D attackCollider)
     {
         if (!canPerformAttack)
             return;
 
+        // 🧨 Si hay una bomba equipada, lanzarla
+        if (bombEquipped)
+        {
+            LaunchBomb(dir, bombPrefab);
+            bombEquipped = false;
+            return;
+        }
+
+        // 💥 Si hay una super bomba equipada, lanzarla
+        if (superBombEquipped)
+        {
+            LaunchBomb(dir, superBombPrefab);
+            superBombEquipped = false;
+            return;
+        }
+
+        // 🦇 Si hay un bat equipado
+        if (batEquipped && bat != null)
+        {
+            bat.Equip = true;
+            return;
+        }
+
+        // 🪚 Si hay una chainsaw equipada
+        if (chainsawEquipped && chainsaw != null)
+        {
+            chainsaw.Equip = true;
+            return;
+        }
+
+        // ⚔️ Ataque normal
         StartCoroutine(Attack(attackCollider));
     }
 
@@ -65,7 +108,6 @@ public class BlobAttackController : MonoBehaviour
         canAttack = false;
         attackCollider.enabled = true;
 
-        
         var hitbox = attackCollider.GetComponent<AttackHitbox>();
         if (hitbox != null)
             hitbox.damage = damage;
@@ -75,5 +117,25 @@ public class BlobAttackController : MonoBehaviour
 
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
+    }
+
+    // ==============================
+    // 🧨 Lógica para lanzar bombas
+    // ==============================
+    private void LaunchBomb(Vector2 dir, GameObject prefab)
+    {
+        if (prefab == null) return;
+
+        Vector3 spawnPos = transform.position + (Vector3)(dir * 0.5f);
+        GameObject bombObj = Instantiate(prefab, spawnPos, Quaternion.identity);
+
+        Bomb newBomb = bombObj.GetComponent<Bomb>();
+        if (newBomb != null)
+        {
+            newBomb.Equip = true;
+            newBomb.SetLaunchDirection(dir);
+        }
+
+        Debug.Log("💣 Lanzada bomba en dirección " + dir);
     }
 }
