@@ -66,7 +66,7 @@ public class BlobAttackController : MonoBehaviour
         if (!canPerformAttack)
             return;
 
-        // 🧨 Si hay una bomba equipada, lanzarla
+       
         if (bombEquipped)
         {
             LaunchBomb(dir, bombPrefab);
@@ -74,7 +74,7 @@ public class BlobAttackController : MonoBehaviour
             return;
         }
 
-        // 💥 Si hay una super bomba equipada, lanzarla
+        
         if (superBombEquipped)
         {
             LaunchBomb(dir, superBombPrefab);
@@ -82,22 +82,26 @@ public class BlobAttackController : MonoBehaviour
             return;
         }
 
-        // 🦇 Si hay un bat equipado
+       
         if (batEquipped && bat != null)
         {
             bat.Equip = true;
+            batEquipped = false;
             return;
+            
         }
+        
 
-        // 🪚 Si hay una chainsaw equipada
         if (chainsawEquipped && chainsaw != null)
         {
             chainsaw.Equip = true;
+            chainsawEquipped = false;
             return;
         }
 
-        // ⚔️ Ataque normal
+       
         StartCoroutine(Attack(attackCollider));
+       
     }
 
     private IEnumerator Attack(Collider2D attackCollider)
@@ -119,9 +123,7 @@ public class BlobAttackController : MonoBehaviour
         canAttack = true;
     }
 
-    // ==============================
-    // 🧨 Lógica para lanzar bombas
-    // ==============================
+   
     private void LaunchBomb(Vector2 dir, GameObject prefab)
     {
         if (prefab == null) return;
@@ -136,6 +138,6 @@ public class BlobAttackController : MonoBehaviour
             newBomb.SetLaunchDirection(dir);
         }
 
-        Debug.Log("💣 Lanzada bomba en dirección " + dir);
+       
     }
 }

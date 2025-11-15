@@ -15,16 +15,13 @@ public class CraftMenuManager : MonoBehaviour
     public GameObject Bomb;
     public GameObject SuperBomb;
 
-    private BlobAttackController playerAttack; 
+    private BlobAttackController playerAttack;
 
     private void Awake()
     {
         controls = new InputSystem_Actions();
 
-       
         controls.Player.Activate.performed += ctx => ToggleMenu();
-
-        
         controls.Player.AttackLeft.performed += ctx => OnSelectLeft();
         controls.Player.AttackRight.performed += ctx => OnSelectRight();
         controls.Player.AttackUp.performed += ctx => OnSelectUp();
@@ -32,7 +29,6 @@ public class CraftMenuManager : MonoBehaviour
 
     private void Start()
     {
-        
         playerAttack = FindFirstObjectByType<BlobAttackController>();
     }
 
@@ -64,7 +60,6 @@ public class CraftMenuManager : MonoBehaviour
         usedBolts = 0;
         usedGears = 0;
 
-        
         if (playerAttack != null)
             playerAttack.canPerformAttack = false;
     }
@@ -77,16 +72,15 @@ public class CraftMenuManager : MonoBehaviour
         craftMenu.SetActive(false);
         Time.timeScale = 1f;
 
-     
         if (playerAttack != null)
             playerAttack.canPerformAttack = true;
 
         CheckCombinations();
     }
 
-    // =====================
-    //   Selecciones Craft
-    // =====================
+    // ============================================================
+    // Selección de materiales
+    // ============================================================
 
     private void OnSelectLeft()
     {
@@ -98,11 +92,11 @@ public class CraftMenuManager : MonoBehaviour
         {
             obj.RemoveChip(1);
             usedChips++;
-            Debug.Log("🧩 Chip usado. Total usados: " + usedChips);
+            Debug.Log("🧩 Chip usado.");
         }
         else
         {
-            Debug.Log("❌ No hay más Chips disponibles.");
+            Debug.Log("❌ No hay más Chips.");
         }
     }
 
@@ -116,11 +110,11 @@ public class CraftMenuManager : MonoBehaviour
         {
             obj.RemoveGear(1);
             usedGears++;
-            Debug.Log("⚙️ Gear usado. Total usados: " + usedGears);
+            Debug.Log("⚙️ Gear usado.");
         }
         else
         {
-            Debug.Log("❌ No hay más Gears disponibles.");
+            Debug.Log("❌ No hay más Gears.");
         }
     }
 
@@ -134,62 +128,114 @@ public class CraftMenuManager : MonoBehaviour
         {
             obj.RemoveBolt(1);
             usedBolts++;
-            Debug.Log("🔩 Bolt usado. Total usados: " + usedBolts);
+            Debug.Log("🔩 Bolt usado.");
         }
         else
         {
-            Debug.Log("❌ No hay más Bolts disponibles.");
+            Debug.Log("❌ No hay más Bolts.");
         }
     }
 
-    // =====================
-    //   Resultado Craft
-    // =====================
+    // ============================================================
+    // Resultado del Craft
+    // ============================================================
 
     private void CheckCombinations()
     {
-        var playerAttack = FindFirstObjectByType<BlobAttackController>();
         var obj = objectManager.Instance;
+        BlobMovement blob = FindFirstObjectByType<BlobMovement>();
+        var playerAttack = FindFirstObjectByType<BlobAttackController>();
 
-        int bolts = obj.GetBolts();
-        int chips = obj.GetChips();
-        int gears = obj.GetGears();
+        // ============================
+        // 1 Chip + 1 Gear → LASER
+        // ============================
+        if (usedChips == 1 && usedGears == 1 && usedBolts == 0)
+        {
+            if (blob != null)
+                blob.laserEquip = true;
 
-        
-        if (usedBolts == 2 && usedChips == 0 && usedGears == 0)
-        {   
-                playerAttack.bombEquipped = true;    
+            Debug.Log("🔫 Laser activado (1 Chip + 1 Gear)");
         }
-                
+
+        // ============================
+        // 1 BOLT + 1 GEAR → DASH
+        // ============================
+        else if (usedBolts == 1 && usedGears == 1 && usedChips == 0)
+        {
+            if (blob != null)
+            {
+                blob.SetDashActive(true);
+                Debug.Log("⚡ Dash activado con 1 Bolt + 1 Gear");
+            }
+        }
+
+        // ============================
+        // 2 Bolts → Bomb
+        // ============================
+        else if (usedBolts == 2 && usedChips == 0 && usedGears == 0)
+        {
+            playerAttack.bombEquipped = true;
+            Debug.Log("💣 Bomb creada");
+        }
+
+        // ============================
+        // 3 Bolts → SuperBomb
+        // ============================
         else if (usedBolts >= 3 && usedChips == 0 && usedGears == 0)
-        { 
-                playerAttack.superBombEquipped = true;            
+        {
+            playerAttack.superBombEquipped = true;
+            Debug.Log("💥 SuperBomb creada");
         }
-        else if (usedBolts == 0 && usedChips == 2 && usedGears == 0) //falta hacer que el bate solo pegue una vez
+
+        // ============================
+        // 2 Chips → Bat
+        // ============================
+        else if (usedBolts == 0 && usedChips == 2 && usedGears == 0)
         {
             playerAttack.batEquipped = true;
             playerAttack.crafted = true;
-            
+            Debug.Log("🪓 Bat creado");
         }
 
+        // ============================
+        // 3 Chips → Chainsaw
+        // ============================
         else if (usedBolts == 0 && usedChips >= 3 && usedGears == 0)
         {
             playerAttack.chainsawEquipped = true;
             playerAttack.crafted = true;
-            
+            Debug.Log("🔪 Chainsaw creada");
         }
 
-        // ❌ Si ninguna combinación es válida → reembolso
-        if (playerAttack.crafted == false)
+        // ============================
+        // 2 Gears → +3 HP
+        // ============================
+        else if (usedBolts == 0 && usedChips == 0 && usedGears == 2)
         {
-            Debug.Log("❌ Receta inválida. Se reembolsan materiales usados.");
+            if (blob != null)
+                blob.hp = Mathf.Min(blob.hp + 3, blob.maxHp);
 
-            
+            Debug.Log("❤️ +3 HP restaurado");
+        }
+
+        // ============================
+        // 3 Gears → INVULNERABILITY
+        // ============================
+        else if (usedBolts == 0 && usedChips == 0 && usedGears == 3)
+        {
+            if (blob != null)
+                blob.Invulnerability(5f);
+
+            Debug.Log("🛡 Invulnerabilidad activada");
+        }
+
+        else
+        {
+            Debug.Log("❌ Receta inválida. Se reembolsan materiales.");
         }
 
         usedBolts = 0;
         usedChips = 0;
         usedGears = 0;
-
     }
 }

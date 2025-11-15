@@ -7,6 +7,7 @@ public class Bat : MonoBehaviour
     public Transform player;
     public float offsetDistance = 1f;
     public int damage = 1;
+    public float activeTime = 0.15f; // tiempo que el bat está activo
 
     private BoxCollider2D col;
     private InputSystem_Actions controls;
@@ -36,16 +37,16 @@ public class Bat : MonoBehaviour
 
     private void TrySwing(Vector2 dir)
     {
-        // Solo puede golpear si está equipado y no está en cooldown
         if (!Equip || hasSwung) return;
 
         hasSwung = true;
 
+        // ubicar bat en dirección y activar daño
         transform.position = player.position + (Vector3)dir * offsetDistance;
         col.enabled = true;
 
-        // Desactiva el collider después de un tiempo corto
-        Invoke(nameof(ResetBat), 0.15f);
+        // programar desactivación del bat
+        Invoke(nameof(ResetBat), activeTime);
     }
 
     private void ResetBat()
@@ -53,14 +54,17 @@ public class Bat : MonoBehaviour
         col.enabled = false;
         hasSwung = false;
 
-        // Siempre vuelve a seguir al jugador
+        // des-equipar PERMANENTEMENTE
+        Equip = false;
+
+        // volver a la posición del jugador para ocultar
         transform.position = player.position;
     }
 
     private void Update()
     {
-        // Si está equipado, que siempre siga la posición del jugador
-        if (Equip)
+        // mientras esté equipado, seguir al jugador
+        if (Equip && !hasSwung)
         {
             transform.position = player.position;
         }
@@ -74,6 +78,9 @@ public class Bat : MonoBehaviour
         {
             DamageInfo info = new DamageInfo(damage, player.position);
             collision.SendMessage("TakeDamage", info, SendMessageOptions.DontRequireReceiver);
+
+            // si golpea un enemigo, cancelar antes de los 0.15 s
+            ResetBat();
         }
     }
 }
