@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class CraftMenuManager : MonoBehaviour
 {
+    private AudioManager audioManager;
+
     private InputSystem_Actions controls;
     public GameObject craftMenu;
 
@@ -25,6 +27,8 @@ public class CraftMenuManager : MonoBehaviour
         controls.Player.AttackLeft.performed += ctx => OnSelectLeft();
         controls.Player.AttackRight.performed += ctx => OnSelectRight();
         controls.Player.AttackUp.performed += ctx => OnSelectUp();
+
+        audioManager = Object.FindFirstObjectByType<AudioManager>();
     }
 
     private void Start()
@@ -78,9 +82,7 @@ public class CraftMenuManager : MonoBehaviour
         CheckCombinations();
     }
 
-    // ============================================================
-    // Selección de materiales
-    // ============================================================
+   
 
     private void OnSelectLeft()
     {
@@ -136,9 +138,7 @@ public class CraftMenuManager : MonoBehaviour
         }
     }
 
-    // ============================================================
-    // Resultado del Craft
-    // ============================================================
+    
 
     private void CheckCombinations()
     {
@@ -146,9 +146,7 @@ public class CraftMenuManager : MonoBehaviour
         BlobMovement blob = FindFirstObjectByType<BlobMovement>();
         var playerAttack = FindFirstObjectByType<BlobAttackController>();
 
-        // ============================
-        // 1 Chip + 1 Gear → LASER
-        // ============================
+        
         if (usedChips == 1 && usedGears == 1 && usedBolts == 0)
         {
             if (blob != null)
@@ -157,9 +155,7 @@ public class CraftMenuManager : MonoBehaviour
             Debug.Log("🔫 Laser activado (1 Chip + 1 Gear)");
         }
 
-        // ============================
-        // 1 BOLT + 1 GEAR → DASH
-        // ============================
+       
         else if (usedBolts == 1 && usedGears == 1 && usedChips == 0)
         {
             if (blob != null)
@@ -169,27 +165,20 @@ public class CraftMenuManager : MonoBehaviour
             }
         }
 
-        // ============================
-        // 2 Bolts → Bomb
-        // ============================
         else if (usedBolts == 2 && usedChips == 0 && usedGears == 0)
         {
             playerAttack.bombEquipped = true;
             Debug.Log("💣 Bomb creada");
         }
 
-        // ============================
-        // 3 Bolts → SuperBomb
-        // ============================
+        
         else if (usedBolts >= 3 && usedChips == 0 && usedGears == 0)
         {
             playerAttack.superBombEquipped = true;
             Debug.Log("💥 SuperBomb creada");
         }
 
-        // ============================
-        // 2 Chips → Bat
-        // ============================
+       
         else if (usedBolts == 0 && usedChips == 2 && usedGears == 0)
         {
             playerAttack.batEquipped = true;
@@ -197,9 +186,6 @@ public class CraftMenuManager : MonoBehaviour
             Debug.Log("🪓 Bat creado");
         }
 
-        // ============================
-        // 3 Chips → Chainsaw
-        // ============================
         else if (usedBolts == 0 && usedChips >= 3 && usedGears == 0)
         {
             playerAttack.chainsawEquipped = true;
@@ -207,24 +193,25 @@ public class CraftMenuManager : MonoBehaviour
             Debug.Log("🔪 Chainsaw creada");
         }
 
-        // ============================
-        // 2 Gears → +3 HP
-        // ============================
+       
         else if (usedBolts == 0 && usedChips == 0 && usedGears == 2)
         {
             if (blob != null)
-                blob.hp = Mathf.Min(blob.hp + 3, blob.maxHp);
+                blob.hp = Mathf.Min(blob.hp + 5, blob.maxHp);
+
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.heal);
 
             Debug.Log("❤️ +3 HP restaurado");
         }
 
-        // ============================
-        // 3 Gears → INVULNERABILITY
-        // ============================
+       
         else if (usedBolts == 0 && usedChips == 0 && usedGears == 3)
         {
             if (blob != null)
                 blob.Invulnerability(5f);
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.shield);
 
             Debug.Log("🛡 Invulnerabilidad activada");
         }

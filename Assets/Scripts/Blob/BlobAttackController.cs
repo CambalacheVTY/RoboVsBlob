@@ -2,26 +2,29 @@
 using UnityEngine.InputSystem;
 using System.Collections;
 
+
+
 public class BlobAttackController : MonoBehaviour
 {
-    [Header("Attack Hitboxes")]
+    private AudioManager audioManager;
+
     public Collider2D attackUp;
     public Collider2D attackDown;
     public Collider2D attackLeft;
     public Collider2D attackRight;
 
-    [Header("Attack Settings")]
-    public float attackDuration = 0.1f;
-    public float attackCooldown = 0.2f;
+    
+    public float attackDuration = 0.2f;
+    public float attackCooldown = 0.5f;
     public int damage = 2;
 
-    [Header("Bombs")]
+   
     public GameObject bombPrefab;
     public GameObject superBombPrefab;
     [HideInInspector] public bool bombEquipped = false;
     [HideInInspector] public bool superBombEquipped = false;
 
-    [Header("Melee Weapons")]
+    
     public Bat bat;
     public Chainsaw chainsaw;
     public bool batEquipped = false;
@@ -35,8 +38,14 @@ public class BlobAttackController : MonoBehaviour
 
     private void Awake()
     {
+        
         input = new InputSystem_Actions();
-    }
+
+        GameObject audioObj = GameObject.FindWithTag("Audio");
+        if (audioObj != null)
+            audioManager = audioObj.GetComponent<AudioManager>();
+    
+}
 
     private void Start()
     {
@@ -70,6 +79,8 @@ public class BlobAttackController : MonoBehaviour
         if (bombEquipped)
         {
             LaunchBomb(dir, bombPrefab);
+            if(audioManager != null)
+                audioManager.PlaySFX(audioManager.launch);
             bombEquipped = false;
             return;
         }
@@ -78,6 +89,8 @@ public class BlobAttackController : MonoBehaviour
         if (superBombEquipped)
         {
             LaunchBomb(dir, superBombPrefab);
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.launch);
             superBombEquipped = false;
             return;
         }
@@ -86,6 +99,8 @@ public class BlobAttackController : MonoBehaviour
         if (batEquipped && bat != null)
         {
             bat.Equip = true;
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.swing); 
             batEquipped = false;
             return;
             
@@ -95,8 +110,13 @@ public class BlobAttackController : MonoBehaviour
         if (chainsawEquipped && chainsaw != null)
         {
             chainsaw.Equip = true;
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.saw);
+           
             chainsawEquipped = false;
+            audioManager.StopSFX();
             return;
+            
         }
 
        

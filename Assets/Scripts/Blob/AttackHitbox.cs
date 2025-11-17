@@ -2,12 +2,21 @@
 
 public class AttackHitbox : MonoBehaviour
 {
+    private AudioManager audioManager;
     public int damage = 3;
+
+    private void Awake()
+    {
+        audioManager = Object.FindFirstObjectByType<AudioManager>();
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy"))
         {
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.robotHit);
+
             Robo1Movement enemy = other.GetComponent<Robo1Movement>();
             if (enemy != null)
             {

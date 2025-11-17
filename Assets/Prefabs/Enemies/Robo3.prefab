@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5509014945479842423}
   - component: {fileID: 4686557422936284676}
   - component: {fileID: -6118490400082642645}
+  - component: {fileID: 1936954834192781532}
   m_Layer: 0
   m_Name: Robo3
   m_TagString: Enemy
@@ -76,11 +77,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1762189213
+  m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.31361485, g: 0.55432945, b: 0.98742133, a: 1}
+  m_Sprite: {fileID: 2654235289858693359, guid: 85e74a92d83765846b9b4cbeb3743765, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -172,3 +173,25 @@ MonoBehaviour:
   moveDuration: 0.5
   stopDuration: 0.5
   collectiblePrefab: {fileID: 5629262884795939452, guid: 7f0fbb8a7966c9743ac1d7f347fb52d7, type: 3}
+--- !u!95 &1936954834192781532
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240012622052880266}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cdb8ac99f4241014a96757ba805e66a5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

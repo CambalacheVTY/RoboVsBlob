@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Enemy
   - Wall
+  - innerWall
+  - Audio
   layers:
   - Default
   - TransparentFX
@@ -13,10 +15,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Walls
+  - Crafts
+  - Items
+  - Enemies
   - 
   - 
   - 
@@ -42,6 +44,24 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Enemies
+    uniqueID: 2532778083
+    locked: 0
+  - name: Collectibles
+    uniqueID: 3689889547
+    locked: 0
+  - name: Walls
+    uniqueID: 607456891
+    locked: 0
+  - name: Attacks
+    uniqueID: 4262236025
+    locked: 0
+  - name: Player
+    uniqueID: 2530172333
+    locked: 0
+  - name: Effects
+    uniqueID: 2332444565
     locked: 0
   m_RenderingLayers:
   - Default

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Robo1Movement : MonoBehaviour
 {
+    
+
     public int Health = 8;
     public Transform target;
     public float moveSpeed = 3f;
@@ -56,6 +58,8 @@ public class Robo1Movement : MonoBehaviour
 
     public void TakeDamage(int amount, Vector2 hitSource)
     {
+       
+           
         Health -= amount;
 
         if (!isFlashing)
@@ -72,7 +76,7 @@ public class Robo1Movement : MonoBehaviour
     {
         isFlashing = true;
         Color originalColor = spriteRenderer.color;
-        spriteRenderer.color = Color.red;
+        spriteRenderer.color = Color.green;
         yield return new WaitForSeconds(0.2f);
         spriteRenderer.color = originalColor;
         isFlashing = false;
@@ -100,10 +104,18 @@ public class Robo1Movement : MonoBehaviour
         if (collectiblePrefab == null) return;
 
         float chance = Random.Range(0f, 1f);
-        if (chance <= 0.25f)
+        if (chance <= 0.5f)
         {
             Instantiate(collectiblePrefab, transform.position, Quaternion.identity);
             
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), collision.collider);
         }
     }
 }

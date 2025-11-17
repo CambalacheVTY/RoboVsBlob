@@ -38,7 +38,7 @@ public class GameStateManager : MonoBehaviour
         IsPaused = true;
         Time.timeScale = 0.25f;
 
-        // Solo deshabilitamos ataques o movimiento si querés, no más trees
+        
         controls.Player.Disable();
 
         Debug.Log("🎮 Game paused");

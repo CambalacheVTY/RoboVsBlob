@@ -4,6 +4,10 @@ using System.Collections;
 
 public class BlobMovement : MonoBehaviour
 {
+    private BlobAnimationController animationController;
+
+    private AudioManager audioManager;
+
     private InputSystem_Actions controls;
     private Vector2 moveInput;
     public float moveSpeed = 5f;
@@ -23,40 +27,56 @@ public class BlobMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
 
-    // ============================
-    //        DASH SYSTEM
-    // ============================
+    private Animator animator;
+
+   
+    private Coroutine contactBlinkCoroutine;
+
+   
     public bool canDash = false;
-    private bool isDashing = false;
+    public bool isDashing = false;
     private bool waitingForDashInput = false;
     public float dashSpeedMultiplier = 2f;
     public float dashDuration = 2f;
     public int dashDamage = 2;
-    private Vector2 dashDirection;
+    public Vector2 dashDirection;
 
-    // ============================
-    //        LASER SYSTEM
-    // ============================
-    public bool laserEquip = false;      // se activa por crafting
+  
+    public bool laserEquip = false;
     public int laserDamage = 4;
     public float laserMaxDistance = 100f;
-    private Vector2 lastDirection = Vector2.right; // fallback
+    private Vector2 lastDirection = Vector2.right;
+    public GameObject laserVisual;
+    private bool laserActive = false;
+
+  
+    public GameObject deathScreen;
+    private bool isDead = false;
+    private float gameTimer = 0f;
 
     private void Awake()
     {
         controls = new InputSystem_Actions();
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        animator = GetComponentInChildren<Animator>();
 
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
+
+        if (laserVisual != null)
+            laserVisual.SetActive(false);
+
+        audioManager = Object.FindFirstObjectByType<AudioManager>();
+
+        animationController = GetComponentInChildren<BlobAnimationController>();
+
     }
 
     private void OnEnable()
     {
         controls.Player.Enable();
 
-        // Subscribir handlers nombrados (fácil unsubscribe)
         controls.Player.AttackUp.performed += OnAttackUp;
         controls.Player.AttackDown.performed += OnAttackDown;
         controls.Player.AttackLeft.performed += OnAttackLeft;
@@ -65,7 +85,6 @@ public class BlobMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        // Unsubscribe
         controls.Player.AttackUp.performed -= OnAttackUp;
         controls.Player.AttackDown.performed -= OnAttackDown;
         controls.Player.AttackLeft.performed -= OnAttackLeft;
@@ -74,15 +93,20 @@ public class BlobMovement : MonoBehaviour
         controls.Player.Disable();
     }
 
-    // ---------- Attack handlers ----------
-    private void OnAttackUp(InputAction.CallbackContext ctx) { FireLaser(Vector2.up); }
-    private void OnAttackDown(InputAction.CallbackContext ctx) { FireLaser(Vector2.down); }
-    private void OnAttackLeft(InputAction.CallbackContext ctx) { FireLaser(Vector2.left); }
-    private void OnAttackRight(InputAction.CallbackContext ctx) { FireLaser(Vector2.right); }
+    private void OnAttackUp(InputAction.CallbackContext ctx) => FireLaser(Vector2.up);
+    private void OnAttackDown(InputAction.CallbackContext ctx) => FireLaser(Vector2.down);
+    private void OnAttackLeft(InputAction.CallbackContext ctx) => FireLaser(Vector2.left);
+    private void OnAttackRight(InputAction.CallbackContext ctx) => FireLaser(Vector2.right);
 
-    // ---------- Update / movement ----------
     private void Update()
     {
+        
+        if (!isDead)
+            gameTimer += Time.deltaTime;
+
+        if (laserActive && laserVisual != null)
+            laserVisual.transform.position = transform.position;
+
         if (isDashing) return;
 
         if (!canMove)
@@ -93,7 +117,7 @@ public class BlobMovement : MonoBehaviour
 
         moveInput = controls.Player.Move.ReadValue<Vector2>();
 
-        // Guardar última dirección usada por movimiento (opcional)
+       
         if (moveInput != Vector2.zero)
         {
             if (Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
@@ -102,15 +126,17 @@ public class BlobMovement : MonoBehaviour
                 lastDirection = new Vector2(0, Mathf.Sign(moveInput.y));
         }
 
-        // Detectar primer input para dash
+        
         if (canDash && waitingForDashInput && moveInput != Vector2.zero)
         {
             waitingForDashInput = false;
             StartDash(moveInput.normalized);
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.drill);
             return;
         }
 
-        // daño por contacto
+        
         if (touching && canBeDamaged)
         {
             damageTimer += Time.deltaTime;
@@ -119,6 +145,13 @@ public class BlobMovement : MonoBehaviour
                 hp -= 1;
                 damageTimer = 0f;
             }
+        }
+
+        
+        if (hp <= 0 && !isDead)
+        {
+            Die();
+            return;
         }
     }
 
@@ -130,13 +163,12 @@ public class BlobMovement : MonoBehaviour
             return;
         }
 
-        rb.linearVelocity = moveInput * moveSpeed;
-
-        if (hp <= 0)
-        {
-            Destroy(gameObject);
-        }
+        if (!isDead)
+            rb.linearVelocity = moveInput * moveSpeed;
+        else
+            rb.linearVelocity = Vector2.zero;
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -152,9 +184,13 @@ public class BlobMovement : MonoBehaviour
             if (r2 != null) r2.TakeDamage(dashDamage, hitSource);
             if (r3 != null) r3.TakeDamage(dashDamage, hitSource);
 
-            // Solo parar dash con pared
-            if (collision.gameObject.CompareTag("Wall"))
+            if (collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("innerWall"))
             {
+                if (audioManager != null)
+                {
+                    audioManager.StopSFX();
+
+                }
                 StopDash();
             }
 
@@ -163,24 +199,41 @@ public class BlobMovement : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy") && canBeDamaged)
         {
+            if (audioManager != null)
+                audioManager.PlaySFX(audioManager.takeDamage); ;
             touching = true;
             hp -= 1;
             damageTimer = 0f;
+
+            if (contactBlinkCoroutine == null)
+                contactBlinkCoroutine = StartCoroutine(ContactDamageBlink());
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
+
+
         if (collision.gameObject.CompareTag("Enemy"))
         {
             touching = false;
             damageTimer = 0f;
-        }
+
+            if (contactBlinkCoroutine != null)
+            {
+                StopCoroutine(contactBlinkCoroutine);
+                contactBlinkCoroutine = null;
+
+                if (spriteRenderer != null)
+                    spriteRenderer.color = originalColor;
+            }
+        }if(!isInvulnerable)
+        { audioManager.StopSFX(); }
+            
+        
     }
 
-    // ============================
-    //       DASH SYSTEM
-    // ============================
+    
     public void SetDashActive(bool value)
     {
         canDash = value;
@@ -190,6 +243,7 @@ public class BlobMovement : MonoBehaviour
     private void StartDash(Vector2 direction)
     {
         if (!canDash || isDashing) return;
+
         dashDirection = direction;
         StartCoroutine(DashCoroutine());
     }
@@ -199,6 +253,9 @@ public class BlobMovement : MonoBehaviour
         isDashing = true;
         canBeDamaged = false;
         isInvulnerable = true;
+
+        if (animator != null)
+            animator.SetBool("isDashing", true);
 
         if (spriteRenderer != null)
             spriteRenderer.color = Color.cyan;
@@ -217,6 +274,10 @@ public class BlobMovement : MonoBehaviour
     private void StopDash()
     {
         isDashing = false;
+
+        if (animator != null)
+            animator.SetBool("isDashing", false);
+
         canBeDamaged = true;
         isInvulnerable = false;
 
@@ -226,78 +287,97 @@ public class BlobMovement : MonoBehaviour
             spriteRenderer.color = originalColor;
     }
 
-    // ============================
-    //       LASER: FIRE + DEBUG
-    // ============================
+   
     private void FireLaser(Vector2 dir)
     {
-        // Guardas la dirección "última" para debug/visuales
         lastDirection = dir.normalized;
 
-        // DEBUG: intento de disparo
-        Debug.Log($"[Laser] Intento de disparo. laserEquip={laserEquip}, dir={lastDirection}");
-
         if (!laserEquip)
-        {
-            Debug.Log("[Laser] No equipado o ya usado.");
             return;
-        }
 
-        Vector2 origin = (Vector2)transform.position + lastDirection * 0.1f; // evitar auto-hit
+        StartCoroutine(LaserVisualCoroutine(dir));
+
+        
+            audioManager.PlaySFX(audioManager.laser);
+
+        Vector2 origin = (Vector2)transform.position + lastDirection * 0.1f;
         float maxDist = laserMaxDistance;
 
-        // Raycast para encontrar primer wall (si existe)
-        RaycastHit2D wallHit = Physics2D.Raycast(origin, lastDirection, maxDist, ~0); // todas las capas
+        RaycastHit2D wallHit = Physics2D.Raycast(origin, lastDirection, maxDist, ~0);
         Vector2 endPoint;
 
         if (wallHit.collider != null && wallHit.collider.CompareTag("Wall"))
-        {
             endPoint = wallHit.point;
-            Debug.Log($"[Laser] Wall hit at {endPoint}. Collider: {wallHit.collider.name}");
-        }
         else
-        {
             endPoint = origin + lastDirection * maxDist;
-            Debug.Log("[Laser] No wall hit, usando distancia máxima.");
-        }
 
-        // Dibujo la línea para debug (1s visible en Scene)
-        Debug.DrawLine(origin, endPoint, Color.red, 1f);
-
-        // RaycastAll entre origin y endPoint (usamos distancia calculada)
         float distance = Vector2.Distance(origin, endPoint);
         RaycastHit2D[] hits = Physics2D.RaycastAll(origin, lastDirection, distance);
 
-        int enemyHits = 0;
         foreach (RaycastHit2D h in hits)
         {
             if (h.collider == null) continue;
-
-            // Ignorar colisiones con el player (por si acaso)
             if (h.collider.gameObject == this.gameObject) continue;
 
-            // DEBUG nombre del collider
-            Debug.Log($"[Laser] Hit collider: {h.collider.name} (tag: {h.collider.tag})");
-
-            // Intentar golpear tus tipos de enemigos
             Robo1Movement r1 = h.collider.GetComponent<Robo1Movement>();
             Robo2Movement r2 = h.collider.GetComponent<Robo2Movement>();
             Robo3Movement r3 = h.collider.GetComponent<Robo3Movement>();
 
-            if (r1 != null) { r1.TakeDamage(laserDamage, origin); enemyHits++; Debug.Log("[Laser] Hit Robo1"); }
-            if (r2 != null) { r2.TakeDamage(laserDamage, origin); enemyHits++; Debug.Log("[Laser] Hit Robo2"); }
-            if (r3 != null) { r3.TakeDamage(laserDamage, origin); enemyHits++; Debug.Log("[Laser] Hit Robo3"); }
+            if (r1 != null) r1.TakeDamage(laserDamage, origin);
+            if (r2 != null) r2.TakeDamage(laserDamage, origin);
+            if (r3 != null) r3.TakeDamage(laserDamage, origin);
         }
+        
 
-        Debug.Log($"[Laser] Total enemies hit: {enemyHits}");
-
-        // Usar el láser una sola vez
         laserEquip = false;
     }
 
-    // ============================
-    //    INVULNERABILIDAD BASE
-    // ============================
+    private IEnumerator LaserVisualCoroutine(Vector2 dir)
+    {
+        if (laserVisual == null)
+            yield break;
+
+        laserActive = true;
+        laserVisual.SetActive(true);
+        laserVisual.transform.position = transform.position;
+
+        float angle =
+            (dir == Vector2.right) ? 0f :
+            (dir == Vector2.up) ? 90f :
+            (dir == Vector2.down) ? 270f :
+            180f;
+
+        laserVisual.transform.localRotation = Quaternion.Euler(0, 0, angle);
+
+        yield return new WaitForSeconds(0.5f);
+
+        laserVisual.SetActive(false);
+        laserActive = false;
+    }
+
+    
+    private IEnumerator ContactDamageBlink()
+    {
+        while (touching && canBeDamaged)
+        {
+            if (spriteRenderer != null)
+                spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0.3f);
+
+            yield return new WaitForSeconds(0.1f);
+
+            if (spriteRenderer != null)
+                spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1f);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        if (spriteRenderer != null)
+            spriteRenderer.color = originalColor;
+
+        contactBlinkCoroutine = null;
+    }
+
+    
     public void Invulnerability(float duration = 5f)
     {
         StartCoroutine(InvulnerabilityCoroutine(duration));
@@ -318,5 +398,35 @@ public class BlobMovement : MonoBehaviour
 
         if (spriteRenderer != null)
             spriteRenderer.color = originalColor;
+    }
+
+
+   
+    private void Die()
+    {
+        if (isDead) return;
+        audioManager.StopSFX();
+
+        isDead = true;
+        if (audioManager != null)
+            audioManager.PlaySFX(audioManager.death);
+
+        canMove = false;
+        rb.linearVelocity = Vector2.zero;
+        rb.simulated = false;
+
+        if (animationController != null)
+            animationController.PlayDeathAnimation();
+
+        if (deathScreen != null)
+            deathScreen.SetActive(true);
+
+        
+        DeathScreenUI ui = deathScreen.GetComponent<DeathScreenUI>();
+        if (ui != null)
+            ui.Show(gameTimer);  
+
+       
+        Time.timeScale = 0f;
     }
 }

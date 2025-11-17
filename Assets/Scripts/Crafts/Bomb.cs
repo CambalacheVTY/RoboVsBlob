@@ -2,6 +2,8 @@
 
 public class Bomb : MonoBehaviour
 {
+    private AudioManager audioManager;
+
     public bool Equip = false;
     public float moveSpeed = 6f;
     public float moveTime = 0.3f;
@@ -21,9 +23,11 @@ public class Bomb : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<CircleCollider2D>();
         col.enabled = false;
+
+        audioManager = Object.FindFirstObjectByType<AudioManager>();
     }
 
-    // 🆕 agregado: permite definir la dirección desde fuera (BlobAttackController)
+    
     public void SetLaunchDirection(Vector2 dir)
     {
         launchDir = dir.normalized;
@@ -31,6 +35,8 @@ public class Bomb : MonoBehaviour
 
     private void Start()
     {
+        if (audioManager != null)
+            audioManager.PlaySFX(audioManager.bombTimer);
         if (!Equip)
         {
             Destroy(gameObject);
@@ -61,6 +67,9 @@ public class Bomb : MonoBehaviour
         exploded = true;
         col.enabled = true;
 
+        if (audioManager != null)
+            audioManager.PlaySFX(audioManager.boom);
+
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, col.radius * transform.localScale.x);
         foreach (var hit in hits)
         {
@@ -71,7 +80,7 @@ public class Bomb : MonoBehaviour
         }
 
         if (destroyOnExplode)
-            Destroy(gameObject, 0.05f);
+            Destroy(gameObject, 0.3f);
     }
 }
 

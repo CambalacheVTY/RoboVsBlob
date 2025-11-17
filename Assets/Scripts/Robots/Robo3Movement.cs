@@ -41,12 +41,12 @@ public class Robo3Movement : MonoBehaviour
         {
             if (!isKnockedBack && target != null)
             {
-                // 🌀 fase de movimiento
+               
                 isMoving = true;
                 yield return new WaitForSeconds(moveDuration);
             }
 
-            // 🌀 fase de espera
+            
             isMoving = false;
             rb.linearVelocity = Vector2.zero;
             yield return new WaitForSeconds(stopDuration);
@@ -131,10 +131,18 @@ public class Robo3Movement : MonoBehaviour
         if (collectiblePrefab == null) return;
 
         float chance = Random.Range(0f, 1f);
-        if (chance <= 0.25f)
+        if (chance <= 0.5f)
         {
             Instantiate(collectiblePrefab, transform.position, Quaternion.identity);
             Debug.Log("Coleccionable spawneado!");
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Wall"))
+        {
+            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), collision.collider);
         }
     }
 }
