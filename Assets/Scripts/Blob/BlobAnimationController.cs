@@ -60,9 +60,7 @@ public class BlobAnimationController : MonoBehaviour
         }
     }
 
-    // =========================
-    // VALIDACIÓN CENTRAL
-    // =========================
+   
     private bool CanAnimate()
     {
         if (movement == null) return false;
@@ -71,9 +69,7 @@ public class BlobAnimationController : MonoBehaviour
         return true;
     }
 
-    // =========================
-    // MOVIMIENTO
-    // =========================
+   
     private void OnMove(InputAction.CallbackContext ctx)
     {
         if (!CanAnimate())
@@ -94,9 +90,7 @@ public class BlobAnimationController : MonoBehaviour
             transform.localScale = new Vector3(-Mathf.Abs(baseScale.x), baseScale.y, baseScale.z);
     }
 
-    // =========================
-    // ATAQUE
-    // =========================
+   
     private void TryAttack(string dir)
     {
         if (!CanAnimate())
@@ -154,9 +148,7 @@ public class BlobAnimationController : MonoBehaviour
             transform.localEulerAngles = Vector3.zero;
     }
 
-    // =========================
-    // DASH
-    // =========================
+   
     private Vector3 GetDashRotation(Vector2 dir)
     {
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
@@ -165,9 +157,7 @@ public class BlobAnimationController : MonoBehaviour
             return dir.y > 0 ? Vector3.zero : new Vector3(0, 0, 180);
     }
 
-    // =========================
-    // MUERTE
-    // =========================
+ 
     public void PlayDeathAnimation()
     {
         if (animator != null)

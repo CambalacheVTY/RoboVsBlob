@@ -27,9 +27,7 @@ public class displayManager : MonoBehaviour
             fullscreenToggle.onValueChanged.RemoveListener(OnFullscreenToggle);
     }
 
-    // ============================
-    // FULLSCREEN TOGGLE
-    // ============================
+   
     public void OnFullscreenToggle(bool value)
     {
         ApplyFullscreen(value);
@@ -42,12 +40,12 @@ public class displayManager : MonoBehaviour
     {
         if (fullscreen)
         {
-            // Borderless fullscreen (no resize)
+            
             Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
         }
         else
         {
-            // Windowed + resizable (drag corner)
+            
             Screen.fullScreenMode = FullScreenMode.Windowed;
         }
     }

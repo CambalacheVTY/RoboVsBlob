@@ -38,8 +38,7 @@ public class DeathScreenUI : MonoBehaviour
     {
         if (timeText != null)
             timeText.text = "Time: " + cachedTime.ToString("0.0") + " s";
-        else
-            Debug.LogError("DeathScreenUI → timeText NO asignado en Inspector!");
+       
     }
 
     public void Retry()

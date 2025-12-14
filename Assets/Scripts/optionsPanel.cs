@@ -18,9 +18,7 @@ public class OptionsPanel : MonoBehaviour
         isInitializing = false;
     }
 
-    // =========================
-    // RESOLUTIONS
-    // =========================
+   
     void InitResolutions()
     {
         resolutions = Screen.resolutions;
@@ -43,9 +41,7 @@ public class OptionsPanel : MonoBehaviour
        
     }
 
-    // =========================
-    // CALLBACKS
-    // =========================
+    
     public void OnResolutionChanged(int index)
     {
         if (isInitializing) return;
@@ -59,7 +55,7 @@ public class OptionsPanel : MonoBehaviour
         if (isInitializing) return;
 
         Screen.fullScreenMode = value
-            ? FullScreenMode.FullScreenWindow // ✅ CLAVE
+            ? FullScreenMode.FullScreenWindow 
             : FullScreenMode.Windowed;
 
         PlayerPrefs.SetInt("Fullscreen", value ? 1 : 0);

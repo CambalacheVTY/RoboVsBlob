@@ -45,9 +45,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip level1Music;
     public AudioClip level2Music;
 
-    // =========================
-    // UNITY
-    // =========================
+   
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -58,7 +56,7 @@ public class AudioManager : MonoBehaviour
 
         Instance = this;
 
-        // Crear AudioSources si faltan
+        
         if (musicSource == null)
         {
             musicSource = gameObject.AddComponent<AudioSource>();
@@ -73,7 +71,7 @@ public class AudioManager : MonoBehaviour
             sfxSource.playOnAwake = false;
         }
 
-        // Ignorar pausa
+        
         musicSource.ignoreListenerPause = true;
         sfxSource.ignoreListenerPause = true;
 
@@ -82,9 +80,7 @@ public class AudioManager : MonoBehaviour
         ApplySettings();
     }
 
-    // =========================
-    // SFX
-    // =========================
+  
     public void PlaySFX(AudioClip clip)
     {
         if (!sfxEnabled || clip == null || sfxSource == null)
@@ -104,9 +100,7 @@ public class AudioManager : MonoBehaviour
             sfxSource.Stop();
     }
 
-    // =========================
-    // MUSIC
-    // =========================
+    
     public void PlayMusic(AudioClip clip)
     {
         if (!musicEnabled || clip == null || musicSource == null)
@@ -127,9 +121,7 @@ public class AudioManager : MonoBehaviour
             musicSource.Stop();
     }
 
-    // =========================
-    // UI CALLBACKS
-    // =========================
+
     public void SetMusicVolume(float value)
     {
         musicVolume = value;
