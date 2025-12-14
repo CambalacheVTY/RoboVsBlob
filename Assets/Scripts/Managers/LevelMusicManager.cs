@@ -43,4 +43,14 @@ public class LevelMusicPlayer : MonoBehaviour
         if (playImmediately && newClip != null)
             musicSource.Play();
     }
+
+    public void SetMute(bool mute)
+    {
+        if (musicSource == null) return;
+
+        if (mute)
+            musicSource.volume = 0f;
+        else
+            musicSource.volume = volume;
+    }
 }

@@ -51,7 +51,7 @@ public class BlobMovement : MonoBehaviour
 
   
     public GameObject deathScreen;
-    private bool isDead = false;
+    public bool isDead = false;
     private float gameTimer = 0f;
 
     private void Awake()
@@ -93,10 +93,45 @@ public class BlobMovement : MonoBehaviour
         controls.Player.Disable();
     }
 
-    private void OnAttackUp(InputAction.CallbackContext ctx) => FireLaser(Vector2.up);
-    private void OnAttackDown(InputAction.CallbackContext ctx) => FireLaser(Vector2.down);
-    private void OnAttackLeft(InputAction.CallbackContext ctx) => FireLaser(Vector2.left);
-    private void OnAttackRight(InputAction.CallbackContext ctx) => FireLaser(Vector2.right);
+    private void OnAttackUp(InputAction.CallbackContext ctx)
+    {
+        if (!CanAct()) return;
+        FireLaser(Vector2.up);
+    }
+
+    private void OnAttackDown(InputAction.CallbackContext ctx)
+    {
+        if (!CanAct()) return;
+        FireLaser(Vector2.down);
+    }
+
+    private void OnAttackLeft(InputAction.CallbackContext ctx)
+    {
+        if (!CanAct()) return;
+        FireLaser(Vector2.left);
+    }
+
+    private void OnAttackRight(InputAction.CallbackContext ctx)
+    {
+        if (!CanAct()) return;
+        FireLaser(Vector2.right);
+    }
+
+    private bool CanAct()
+    {
+        return !isDead && Time.timeScale > 0f;
+    }
+
+    private void HandleRotation()
+    {
+        if (moveInput == Vector2.zero)
+            return;
+
+        if (Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
+            lastDirection = new Vector2(Mathf.Sign(moveInput.x), 0);
+        else
+            lastDirection = new Vector2(0, Mathf.Sign(moveInput.y));
+    }
 
     private void Update()
     {
@@ -117,16 +152,15 @@ public class BlobMovement : MonoBehaviour
 
         moveInput = controls.Player.Move.ReadValue<Vector2>();
 
-       
-        if (moveInput != Vector2.zero)
-        {
-            if (Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
-                lastDirection = new Vector2(Mathf.Sign(moveInput.x), 0);
-            else
-                lastDirection = new Vector2(0, Mathf.Sign(moveInput.y));
-        }
 
-        
+        moveInput = controls.Player.Move.ReadValue<Vector2>();
+
+        if (CanAct())
+            HandleRotation();
+
+
+
+
         if (canDash && waitingForDashInput && moveInput != Vector2.zero)
         {
             waitingForDashInput = false;
@@ -167,6 +201,18 @@ public class BlobMovement : MonoBehaviour
             rb.linearVelocity = moveInput * moveSpeed;
         else
             rb.linearVelocity = Vector2.zero;
+    }
+
+    public void SetGodMode(bool value)
+    {
+        isInvulnerable = value;
+        canBeDamaged = !value;
+
+
+        spriteRenderer.color = value ? Color.magenta : originalColor;
+
+
+        Debug.Log("GOD MODE: " + (value ? "ON" : "OFF"));
     }
 
 
@@ -233,7 +279,9 @@ public class BlobMovement : MonoBehaviour
         
     }
 
-    
+  
+
+
     public void SetDashActive(bool value)
     {
         canDash = value;
@@ -429,4 +477,5 @@ public class BlobMovement : MonoBehaviour
        
         Time.timeScale = 0f;
     }
+    
 }

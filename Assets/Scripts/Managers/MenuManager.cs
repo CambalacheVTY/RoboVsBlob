@@ -8,8 +8,9 @@ public class MenuManager : MonoBehaviour
     public GameObject levelSelectPanel;
     public GameObject creditsPanel;
     public GameObject deathPanel;
+    public GameObject optionsPanel;
 
-  
+
     public void OpenLevelSelect()
     {
         mainPanel.SetActive(false);
@@ -22,11 +23,18 @@ public class MenuManager : MonoBehaviour
         creditsPanel.SetActive(true);
     }
 
+    public void OpenOptions()
+    {
+        mainPanel.SetActive(false);
+        optionsPanel.SetActive(true);
+    }
+
     public void BackToMain()
     {
         mainPanel.SetActive(true);
         levelSelectPanel.SetActive(false);
         creditsPanel.SetActive(false);
+        optionsPanel.SetActive(false);
     }
 
    

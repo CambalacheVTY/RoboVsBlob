@@ -8,10 +8,10 @@ public class BlobAnimationController : MonoBehaviour
     private InputSystem_Actions controls;
 
     private Vector3 baseScale;
-    private BlobMovement movement; 
+    private BlobMovement movement;
 
-    private bool drillPlayed = false; 
-    private bool attackLocked = false; 
+    
+    private bool attackLocked = false;
 
     private void Awake()
     {
@@ -23,31 +23,6 @@ public class BlobAnimationController : MonoBehaviour
     private void Start()
     {
         baseScale = transform.localScale;
-    }
-
-    private void Update()
-    {
-       
-        if (movement != null && movement.isDashing)
-        {
-            animator.SetBool("isDashing", true);
-
-            if (!drillPlayed)
-            {
-                drillPlayed = true;
-            }
-
-            
-            transform.localEulerAngles = GetDashRotation(movement.dashDirection);
-
-            return; 
-        }
-        else
-        {
-            animator.SetBool("isDashing", false);
-            drillPlayed = false;
-           
-        }
     }
 
     private void OnEnable()
@@ -68,8 +43,42 @@ public class BlobAnimationController : MonoBehaviour
         controls.Disable();
     }
 
+    private void Update()
+    {
+        if (!CanAnimate())
+            return;
+
+        if (movement != null && movement.isDashing)
+        {
+            animator.SetBool("isDashing", true);
+            transform.localEulerAngles = GetDashRotation(movement.dashDirection);
+            return;
+        }
+        else
+        {
+            animator.SetBool("isDashing", false);
+        }
+    }
+
+    // =========================
+    // VALIDACIÓN CENTRAL
+    // =========================
+    private bool CanAnimate()
+    {
+        if (movement == null) return false;
+        if (movement.isDead) return false;
+        if (Time.timeScale == 0f) return false;
+        return true;
+    }
+
+    // =========================
+    // MOVIMIENTO
+    // =========================
     private void OnMove(InputAction.CallbackContext ctx)
     {
+        if (!CanAnimate())
+            return;
+
         Vector2 move = ctx.ReadValue<Vector2>();
         UpdateMoveAnimation(move);
     }
@@ -79,18 +88,22 @@ public class BlobAnimationController : MonoBehaviour
         bool isMoving = move.sqrMagnitude > 0.01f;
         animator.SetBool("isMoving", isMoving);
 
-        
         if (move.x > 0.1f)
             transform.localScale = new Vector3(Mathf.Abs(baseScale.x), baseScale.y, baseScale.z);
         else if (move.x < -0.1f)
             transform.localScale = new Vector3(-Mathf.Abs(baseScale.x), baseScale.y, baseScale.z);
     }
 
-    
+    // =========================
+    // ATAQUE
+    // =========================
     private void TryAttack(string dir)
     {
+        if (!CanAnimate())
+            return;
+
         if (attackLocked) return;
-        if (movement != null && movement.isDashing) return; 
+        if (movement != null && movement.isDashing) return;
 
         StartCoroutine(AttackCooldown());
         StartCoroutine(AttackRoutine(dir));
@@ -99,7 +112,7 @@ public class BlobAnimationController : MonoBehaviour
     private IEnumerator AttackCooldown()
     {
         attackLocked = true;
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
         attackLocked = false;
     }
 
@@ -118,26 +131,32 @@ public class BlobAnimationController : MonoBehaviour
                 animator.SetBool("lookingUp", true);
                 transform.localEulerAngles = Vector3.zero;
                 break;
+
             case "down":
                 animator.SetBool("lookingDown", true);
                 transform.localEulerAngles = new Vector3(0, 0, 180);
                 break;
+
             case "left":
                 animator.SetBool("lookingLeft", true);
                 transform.localEulerAngles = new Vector3(0, 0, 90);
                 break;
+
             case "right":
                 animator.SetBool("lookingRight", true);
                 transform.localEulerAngles = new Vector3(0, 0, -90);
                 break;
         }
 
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
 
-        transform.localEulerAngles = Vector3.zero; 
+        if (CanAnimate())
+            transform.localEulerAngles = Vector3.zero;
     }
 
-  
+    // =========================
+    // DASH
+    // =========================
     private Vector3 GetDashRotation(Vector2 dir)
     {
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
@@ -145,9 +164,19 @@ public class BlobAnimationController : MonoBehaviour
         else
             return dir.y > 0 ? Vector3.zero : new Vector3(0, 0, 180);
     }
+
+    // =========================
+    // MUERTE
+    // =========================
     public void PlayDeathAnimation()
     {
         if (animator != null)
             animator.SetTrigger("dead");
+    }
+
+    public void DisableAnimationControl()
+    {
+        controls.Disable();
+        enabled = false;
     }
 }

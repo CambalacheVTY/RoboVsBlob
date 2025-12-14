@@ -145,6 +145,69 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatBolt"",
+                    ""type"": ""Button"",
+                    ""id"": ""802596a1-a24d-49a4-9abe-324f3e76dce5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatChip"",
+                    ""type"": ""Button"",
+                    ""id"": ""66d21353-cc3c-4aa9-ae21-144444be054e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatGear"",
+                    ""type"": ""Button"",
+                    ""id"": ""6fb6a0fe-f8b8-4e4b-b541-6854f0676a08"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatNuke"",
+                    ""type"": ""Button"",
+                    ""id"": ""35a9b9f5-a127-4857-8362-6849df32a66b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatGodMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""424b2934-859f-4ae7-b4cb-96a3f4cbdb0a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CheatMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6ff6d1c-fc44-4358-967f-0b4f3acb7245"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""a3004087-2218-4756-aa4d-9e32d6bf4c3d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -334,6 +397,160 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Activate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ab6fb457-4624-4ed3-af89-5b4373c9ef75"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatBolt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8623113e-48fd-4687-92cf-5ea9ecd23251"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatBolt"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e8e685f-0e21-427e-b012-987fb45fba1d"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatChip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65de6233-2b33-4bb4-a98f-ef098f92165d"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatChip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""63e47035-acdb-4ed3-898d-bc46b0abb7df"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatGear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4432ee3-fd8a-470f-9dbd-966c17809609"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatGear"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5b44e5d0-e0d4-414f-978c-8bb951598bdc"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatNuke"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2fd7be61-f36e-402d-9fe0-a09978817b50"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatNuke"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5c5d1766-4ee9-44ba-b81a-9af04e4db713"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatGodMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b71010d7-a839-4de9-9b75-7fd0a52ce604"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatGodMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58c694ce-561b-47aa-8662-5bec296359a6"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65e04d6c-5370-4602-87eb-87221f7f6184"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CheatMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5e486ae-fad1-4f7b-b074-ef97a56854b9"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""792ee2df-2826-48e0-b54c-34d0dc001f2b"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -348,13 +565,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Submit"",
                     ""type"": ""Button"",
                     ""id"": ""7607c7b6-cd76-4816-beef-bd0341cfe950"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -363,7 +580,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""15cef263-9014-4fd5-94d9-4e4a6234a6ef"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -700,7 +917,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc"",
-                    ""path"": ""*/{Submit}"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
@@ -710,8 +927,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""69d1760d-c424-41b3-a962-d7a1f9a479a3"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""82627dcc-3b13-4ba9-841d-e4b746d6553e"",
-                    ""path"": ""*/{Cancel}"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse;Gamepad;Touch;Joystick;XR"",
@@ -792,6 +1020,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""XR"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3875d1f0-2e1a-461d-bb83-3f1ddcac0f44"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -925,6 +1164,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_AttackLeft = m_Player.FindAction("AttackLeft", throwIfNotFound: true);
         m_Player_AttackRight = m_Player.FindAction("AttackRight", throwIfNotFound: true);
         m_Player_Activate = m_Player.FindAction("Activate", throwIfNotFound: true);
+        m_Player_CheatBolt = m_Player.FindAction("CheatBolt", throwIfNotFound: true);
+        m_Player_CheatChip = m_Player.FindAction("CheatChip", throwIfNotFound: true);
+        m_Player_CheatGear = m_Player.FindAction("CheatGear", throwIfNotFound: true);
+        m_Player_CheatNuke = m_Player.FindAction("CheatNuke", throwIfNotFound: true);
+        m_Player_CheatGodMode = m_Player.FindAction("CheatGodMode", throwIfNotFound: true);
+        m_Player_CheatMode = m_Player.FindAction("CheatMode", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1024,6 +1270,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_AttackLeft;
     private readonly InputAction m_Player_AttackRight;
     private readonly InputAction m_Player_Activate;
+    private readonly InputAction m_Player_CheatBolt;
+    private readonly InputAction m_Player_CheatChip;
+    private readonly InputAction m_Player_CheatGear;
+    private readonly InputAction m_Player_CheatNuke;
+    private readonly InputAction m_Player_CheatGodMode;
+    private readonly InputAction m_Player_CheatMode;
+    private readonly InputAction m_Player_Pause;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1059,6 +1312,34 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Activate".
         /// </summary>
         public InputAction @Activate => m_Wrapper.m_Player_Activate;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatBolt".
+        /// </summary>
+        public InputAction @CheatBolt => m_Wrapper.m_Player_CheatBolt;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatChip".
+        /// </summary>
+        public InputAction @CheatChip => m_Wrapper.m_Player_CheatChip;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatGear".
+        /// </summary>
+        public InputAction @CheatGear => m_Wrapper.m_Player_CheatGear;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatNuke".
+        /// </summary>
+        public InputAction @CheatNuke => m_Wrapper.m_Player_CheatNuke;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatGodMode".
+        /// </summary>
+        public InputAction @CheatGodMode => m_Wrapper.m_Player_CheatGodMode;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/CheatMode".
+        /// </summary>
+        public InputAction @CheatMode => m_Wrapper.m_Player_CheatMode;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1103,6 +1384,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Activate.started += instance.OnActivate;
             @Activate.performed += instance.OnActivate;
             @Activate.canceled += instance.OnActivate;
+            @CheatBolt.started += instance.OnCheatBolt;
+            @CheatBolt.performed += instance.OnCheatBolt;
+            @CheatBolt.canceled += instance.OnCheatBolt;
+            @CheatChip.started += instance.OnCheatChip;
+            @CheatChip.performed += instance.OnCheatChip;
+            @CheatChip.canceled += instance.OnCheatChip;
+            @CheatGear.started += instance.OnCheatGear;
+            @CheatGear.performed += instance.OnCheatGear;
+            @CheatGear.canceled += instance.OnCheatGear;
+            @CheatNuke.started += instance.OnCheatNuke;
+            @CheatNuke.performed += instance.OnCheatNuke;
+            @CheatNuke.canceled += instance.OnCheatNuke;
+            @CheatGodMode.started += instance.OnCheatGodMode;
+            @CheatGodMode.performed += instance.OnCheatGodMode;
+            @CheatGodMode.canceled += instance.OnCheatGodMode;
+            @CheatMode.started += instance.OnCheatMode;
+            @CheatMode.performed += instance.OnCheatMode;
+            @CheatMode.canceled += instance.OnCheatMode;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         /// <summary>
@@ -1132,6 +1434,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Activate.started -= instance.OnActivate;
             @Activate.performed -= instance.OnActivate;
             @Activate.canceled -= instance.OnActivate;
+            @CheatBolt.started -= instance.OnCheatBolt;
+            @CheatBolt.performed -= instance.OnCheatBolt;
+            @CheatBolt.canceled -= instance.OnCheatBolt;
+            @CheatChip.started -= instance.OnCheatChip;
+            @CheatChip.performed -= instance.OnCheatChip;
+            @CheatChip.canceled -= instance.OnCheatChip;
+            @CheatGear.started -= instance.OnCheatGear;
+            @CheatGear.performed -= instance.OnCheatGear;
+            @CheatGear.canceled -= instance.OnCheatGear;
+            @CheatNuke.started -= instance.OnCheatNuke;
+            @CheatNuke.performed -= instance.OnCheatNuke;
+            @CheatNuke.canceled -= instance.OnCheatNuke;
+            @CheatGodMode.started -= instance.OnCheatGodMode;
+            @CheatGodMode.performed -= instance.OnCheatGodMode;
+            @CheatGodMode.canceled -= instance.OnCheatGodMode;
+            @CheatMode.started -= instance.OnCheatMode;
+            @CheatMode.performed -= instance.OnCheatMode;
+            @CheatMode.canceled -= instance.OnCheatMode;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         /// <summary>
@@ -1474,6 +1797,55 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnActivate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatBolt" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatBolt(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatChip" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatChip(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatGear" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatGear(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatNuke" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatNuke(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatGodMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatGodMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CheatMode" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCheatMode(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
